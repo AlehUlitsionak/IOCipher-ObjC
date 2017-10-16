@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DDSFile.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -73,6 +74,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSDictionary<NSFileAttributeKey, id> *) fileAttributesAtPath:(NSString*)path
                                                                    error:(NSError**)error;
+
+
+- (NSArray<DDSFile *> *) filesAtPath:(NSString*)path error:(NSError**)error;
+- (BOOL) pathIsDir:(NSString *)path;
 
 @end
 

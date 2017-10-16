@@ -9,6 +9,7 @@
 #import "IOCipher.h"
 @import SQLCipher;
 #import "sqlfs.h"
+#import "DDSConstants.h"
 
 /** Switches sign on sqlfs result codes */
 static inline NSError* IOCipherPOSIXError(int code) {
@@ -18,7 +19,7 @@ static inline NSError* IOCipherPOSIXError(int code) {
 @interface IOCipher()
 @property (nonatomic, readonly) sqlfs_t *sqlfs;
 @end
-
+ 
 @implementation IOCipher
 
 - (void) dealloc {
@@ -93,6 +94,77 @@ static inline NSError* IOCipherPOSIXError(int code) {
         }
     }
     return NO;
+}
+
+static int fill_dir(void *buf, const char *name, const struct stat *statp, off_t off) {
+    
+    NSMutableArray<NSString *> *entries = *((__unsafe_unretained NSMutableArray<NSString *>  **)(buf));
+    
+    if(statp != NULL)
+        NSLog(@"fill_dir always expects statp to be NULL");
+    if(off != 0)
+        NSLog(@"fill_dir always expects off to be 0");
+    [entries addObject:[NSString stringWithUTF8String:name]];
+
+    return 0;
+}
+
+
+/** Get all folders at path */
+- (NSArray<DDSFile *> *) filesAtPath:(NSString*)path error:(NSError**)error {
+
+    NSMutableArray<NSString *> *entries = [NSMutableArray new];
+    
+    int result = sqlfs_proc_readdir(0, [path UTF8String], &entries, (fuse_fill_dir_t)fill_dir, 0, NULL);
+    if (result == SQLITE_OK) {
+        
+        NSMutableArray<DDSFile *> *returnArray = [NSMutableArray new];
+        [entries enumerateObjectsUsingBlock:^(NSString *item, NSUInteger idx, BOOL *stop) {
+            
+            NSString *fullPath = [path stringByAppendingPathComponent:item];
+            
+            if ([self pathIsDir:fullPath]) {
+                NSError *errorObject;
+
+                NSArray* children = [self filesAtPath:fullPath error:&errorObject];
+                if (!errorObject) {
+                    DDSFile *folder = [[DDSFile alloc] init];
+                    folder.fileName = item;
+                    folder.virtualPath = [path stringByAppendingPathComponent:item];
+                    folder.parent = children;
+                    folder.children = children;
+                    folder.isFolder = YES;
+                    [returnArray addObject:folder];
+                }
+            }
+            else if (![item isEqualToString:@"."] && ![item isEqualToString:@".."]) {
+                DDSFile *file = [[DDSFile alloc] init];
+                file.fileName = item;
+                file.virtualPath = [path stringByAppendingPathComponent:item];
+                file.isFolder = NO;
+                [returnArray addObject:file];
+            }
+        }];
+        
+        return returnArray;
+        
+    } else if (error) {
+        *error = IOCipherPOSIXError(result);
+    }
+    
+    return [NSArray new];
+}
+             
+
+/** Check if path is a directory */
+- (BOOL) pathIsDir:(NSString *)path {
+    NSParameterAssert(path != nil);
+    if (!path) {
+        return NO;
+    }
+    const char * cPath = [path UTF8String];
+    
+    return sqlfs_is_dir(NULL, cPath) == 1;
 }
 
 /** Creates file at path */
