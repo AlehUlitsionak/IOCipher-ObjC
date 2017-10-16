@@ -43,6 +43,8 @@ typedef NS_ENUM(NSInteger, DDSFileAccessType) {
 - (BOOL)createFolderAtPath:(NSString*_Nonnull)path error:(NSError*_Nullable*_Nullable)error;
 - (BOOL)deleteItem:(DDSFile*_Nonnull)item error:(NSError *_Nullable __autoreleasing *_Nullable)error;
 
+- (NSDictionary*)accessInfoForFileAtPath:(NSString *)path;
+
 /* This methods aren't working
 - (void)startObservingFileAtPath:(NSString *_Nonnull)filePath;
 - (void)stopObservingFileAtPath:(NSString *_Nonnull)filePath;
