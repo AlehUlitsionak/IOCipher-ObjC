@@ -152,7 +152,7 @@
     if ([defaults dictionaryForKey:path] != nil) {
         params = [[defaults dictionaryForKey:path] mutableCopy];
     }
-    return params
+    return params;
 }
 
 
