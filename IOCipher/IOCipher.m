@@ -7,7 +7,7 @@
 //
 
 #import "IOCipher.h"
-@import SQLCipher;
+//@import SQLCipher;
 #import "sqlfs.h"
 #import "DDSConstants.h"
 
