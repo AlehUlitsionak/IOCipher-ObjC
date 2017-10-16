@@ -25,9 +25,9 @@ Pod::Spec.new do |s|
     ss.dependency 'IOCipher/common'
   end
 
-  s.subspec 'GCDWebServer' do |ss|
-    ss.source_files = 'IOCipher/GCDWebServer/*.{h,m}'
-    ss.dependency 'IOCipher/common'
-    ss.dependency 'GCDWebServer'
-  end
+#   s.subspec 'GCDWebServer' do |ss|
+#     ss.source_files = 'IOCipher/GCDWebServer/*.{h,m}'
+#     ss.dependency 'IOCipher/common'
+#     ss.dependency 'GCDWebServer'
+#   end
 end
