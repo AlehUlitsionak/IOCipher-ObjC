@@ -52,9 +52,10 @@
     NSFileManager* fileManager = [NSFileManager defaultManager];
     NSURL *groupUrl = [fileManager containerURLForSecurityApplicationGroupIdentifier:kAppGroupIdentifier];
     
-    /* temporary use Documents forlder for debug purposes */
+    /* temporary use Documents forlder for debug purposes
     NSArray *paths = [[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask];
     groupUrl = [paths lastObject];
+     */
     
     NSURL *storagePathUrl = [groupUrl URLByAppendingPathComponent:@"DDStorage"];
     NSString *storagePath = storagePathUrl.path;
