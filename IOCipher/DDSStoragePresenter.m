@@ -119,7 +119,7 @@
 
 - (void)applicationWithName:(NSString *)applicationName accessesFile:(DDSFile *)file withFileAccessType:(DDSFileAccessType)accessType {
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:kAppGroupIdentifier];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     if ([defaults dictionaryForKey:file.virtualPath] != nil) {
         params = [[defaults dictionaryForKey:file.virtualPath] mutableCopy];
@@ -133,7 +133,7 @@
 
 - (void)applicationWithName:(NSString *)applicationName didFinishAccessingFile:(DDSFile *)file withFileAccessType:(DDSFileAccessType)accessType {
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:kAppGroupIdentifier];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     if ([defaults dictionaryForKey:file.virtualPath] != nil) {
         params = [[defaults dictionaryForKey:file.virtualPath] mutableCopy];
@@ -147,7 +147,7 @@
 
 - (NSDictionary*)accessInfoForFileAtPath:(NSString *)path {
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [[NSUserDefaults alloc] initWithSuiteName:kAppGroupIdentifier];
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     if ([defaults dictionaryForKey:path] != nil) {
         params = [[defaults dictionaryForKey:path] mutableCopy];
